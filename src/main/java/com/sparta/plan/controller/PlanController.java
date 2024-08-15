@@ -39,7 +39,7 @@ public class PlanController {
 
     @DeleteMapping("/plans/{id}")
     public Long deletePlan(@PathVariable(name = "id") Long id,
-                           @RequestParam(required = false, name = "password") String password) {
-        return planService.deletePlan(id, password);
+                           @RequestBody(required = false) PlanRequestDto requestDto) {
+        return planService.deletePlan(id, requestDto);
     }
 }

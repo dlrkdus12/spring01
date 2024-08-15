@@ -72,7 +72,7 @@ public class PlanService {
         return id;
     }
 
-    public Long deletePlan(Long id, String password) {
+    public Long deletePlan(Long id, PlanRequestDto requestDto) {
         Plan plan = planRepository.findById(id);
 
         if (plan == null) {
@@ -80,11 +80,11 @@ public class PlanService {
         }
 
         // 비밀번호 일치 여부 검사
-        if (!plan.getPassword().equals(password)) {
+        if (!plan.getPassword().equals(requestDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        planRepository.delete(id, password);
+        planRepository.delete(id, requestDto.getPassword());
         return id;
     }
 }
