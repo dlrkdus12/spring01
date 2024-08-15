@@ -48,7 +48,6 @@ public class PlanService {
                 .map(plan -> new PlanResponseDto(
                         plan.getToDo(),
                         plan.getUsername(),
-                        plan.getPassword(),
                         plan.getCreatedDate() != null ? plan.getCreatedDate() : null,
                         plan.getUpdatedDate() != null ? plan.getUpdatedDate() : null))
                 .collect(Collectors.toList());

@@ -78,7 +78,7 @@ public class PlanRepository {
 
                 LocalDateTime createdDate = createdDateString != null ? LocalDateTime.parse(createdDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
                 LocalDateTime updatedDate = updatedDateString != null ? LocalDateTime.parse(updatedDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
-                return new PlanResponseDto(toDo, username, password, createdDate, updatedDate);
+                return new PlanResponseDto(toDo, username, createdDate, updatedDate);
             }
         });
     }
@@ -99,7 +99,7 @@ public class PlanRepository {
 
                 LocalDateTime createdDate = createdDateString != null ? LocalDateTime.parse(createdDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
                 LocalDateTime updatedDate = updatedDateString != null ? LocalDateTime.parse(updatedDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
-                return new PlanResponseDto(toDo, username, password, createdDate, updatedDate);
+                return new PlanResponseDto(toDo, username, createdDate, updatedDate);
             }
         });
     }
