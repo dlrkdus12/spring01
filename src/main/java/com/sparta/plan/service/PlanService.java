@@ -54,24 +54,37 @@ public class PlanService {
     }
 
     public Long updatePlan(Long id, PlanRequestDto requestDto) {
-        // 바로 entity 조회 in repository
+        // Plan 엔티티 조회
         Plan plan = planRepository.findById(id);
-        plan.update(requestDto);    //4단계 조건
-        if (plan != null) {
-            planRepository.update(id, plan);
-            return id;
-        } else {
+
+        if (plan == null) {
             throw new IllegalArgumentException("선택한 일정이 존재하지 않습니다.");
         }
+
+        // 비밀번호 일치 여부 검사
+        if (!plan.getPassword().equals(requestDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        plan.update(requestDto);
+        planRepository.update(id, plan);
+
+        return id;
     }
 
     public Long deletePlan(Long id, String password) {
         Plan plan = planRepository.findById(id);
-        if (plan != null) {
-            planRepository.delete(id, password);
-            return id;
-        } else {
+
+        if (plan == null) {
             throw new IllegalArgumentException("선택한 일정이 존재하지 않습니다.");
         }
+
+        // 비밀번호 일치 여부 검사
+        if (!plan.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        planRepository.delete(id, password);
+        return id;
     }
 }
