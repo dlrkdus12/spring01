@@ -1,34 +1,48 @@
 package com.sparta.plan.entity;
 
 import com.sparta.plan.dto.PlanRequestDto;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Plan {
-    private Long id;
-    private String toDo;
-    private String username;
-    private String password;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
+@AllArgsConstructor
+@Entity
+@Table(name = "plan")
+public class Plan extends Timestamped {
 
-    public Plan(PlanRequestDto requestDto) {
-        this.toDo = requestDto.getToDo();
-        this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
-        this.createdDate = requestDto.getCreatedDate();
-        this.updatedDate = requestDto.getCreatedDate();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
+    public Plan(PlanRequestDto requestDto, User user) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.user = user;
     }
 
     public void update(PlanRequestDto requestDto) {
-        this.toDo = requestDto.getToDo();
-        this.username = requestDto.getUsername();
-        this.updatedDate = requestDto.getUpdatedDate();
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
     }
 }

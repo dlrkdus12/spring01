@@ -1,19 +1,14 @@
 package com.sparta.plan.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlanRequestDto {
-    private String toDo;
-    private String username;
-    private String password;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdDate;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updatedDate;
+    private Long userId;
+    private String title;
+    private String content;
 }
