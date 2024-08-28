@@ -1,8 +1,10 @@
 package com.sparta.plan.dto;
 
 import com.sparta.plan.entity.Plan;
-import com.sparta.plan.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

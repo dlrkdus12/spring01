@@ -5,8 +5,10 @@ import com.sparta.plan.dto.PlanResponseDto;
 import com.sparta.plan.entity.User;
 import com.sparta.plan.service.PlanService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -26,12 +28,12 @@ public class PlanController {
     }
 
     @GetMapping("/plans")   //parameter-s 에러 뜨면 name ="" 넣기
-    public Page<PlanResponseDto> getPlans(
+    public ResponseEntity<List<PlanResponseDto>> getPlans(
             @RequestParam(required = false, name = "page") int page,
-            @RequestParam(required = false, name = "size") Integer size,
-            PlanRequestDto requestDto
-            ) {
-        return planService.getPlans(requestDto,page-1, size);
+            @RequestParam(required = false, name = "size", defaultValue = "10") int size,
+            @RequestParam(required = false, name = "requestDto") PlanRequestDto requestDto) {
+        List<PlanResponseDto> plans = planService.getPlans(requestDto, page, size);
+        return ResponseEntity.ok(plans);
     }
 
     @PutMapping("/plans/{id}")

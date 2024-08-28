@@ -6,18 +6,19 @@ import com.sparta.plan.entity.Plan;
 import com.sparta.plan.entity.User;
 import com.sparta.plan.repository.PlanRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PlanService {
 
     private final PlanRepository planRepository;
-
-    private static final int DEFAULT_PAGE_SIZE = 10;
 
     public PlanResponseDto createPlan(PlanRequestDto requestDto, User user) {
 
@@ -31,20 +32,17 @@ public class PlanService {
         return PlanResponseDto.fromPlanForSingle(plan);
     }
 
-    public Page<PlanResponseDto> getPlans(PlanRequestDto requestDto, int page, Integer size) {
+    public List<PlanResponseDto> getPlans(PlanRequestDto requestDto, int page, int size) {
 
-        int pageSize = (size == null || size <= 0) ? DEFAULT_PAGE_SIZE : size;
+        Pageable pageable = PageRequest.of(page, size);
 
-        Pageable pageable = PageRequest.of(page, pageSize);
-
-        User user = new User();
-        user.setId(requestDto.getUserId());
-
-        Page<Plan> planList = planRepository.findAllByUserOrderByModifiedAtDesc(user, pageable);
-
-        return planList.map(PlanResponseDto::fromPlanForAll);
+        return planRepository.findAllByUserOrderByModifiedAtDesc(requestDto.getUserId(), pageable)
+                .stream()
+                .map(PlanResponseDto::fromPlanForSingle)
+                .collect(Collectors.toList());
     }
 
+    @Transactional
     public PlanResponseDto updatePlan(Long id, PlanRequestDto requestDto) {
         Plan plan = planRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
