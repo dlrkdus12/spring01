@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlanRepository extends JpaRepository<Plan, Long> {
 
-    Page<Plan> findAllByUserOrderByModifiedAtDesc(Long userId, Pageable pageable);
+    Page<Plan> findAllByOrderByModifiedAtDesc(Pageable pageable);
 }

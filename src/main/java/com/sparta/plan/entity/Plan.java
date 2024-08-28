@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -33,7 +33,7 @@ public class Plan extends Timestamped {
     private User user;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     public Plan(PlanRequestDto requestDto, User user) {
         this.title = requestDto.getTitle();

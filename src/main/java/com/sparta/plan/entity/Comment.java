@@ -21,19 +21,20 @@ public class Comment extends Timestamped {
     private String commentContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
     private Plan plan;
 
-    public Comment(CommentRequestDto requestDto, User user) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Comment(CommentRequestDto requestDto, Plan plan, User user) {
         this.commentContent = requestDto.getCommentContent();
+        this.plan = plan;
         this.user = user;
     }
 
-    public void update(String commentContent) {
-        this.commentContent = commentContent;
+    public void update(CommentRequestDto requestDto) {
+        this.commentContent = requestDto.getCommentContent();
     }
 }

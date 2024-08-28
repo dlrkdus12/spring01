@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlanRequestDto {
+
     private Long userId;
     private String title;
     private String content;
+
 }

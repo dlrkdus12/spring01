@@ -1,5 +1,6 @@
 package com.sparta.plan.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.plan.entity.Plan;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanResponseDto {
     private String title;
     private String content;
@@ -21,7 +23,7 @@ public class PlanResponseDto {
 
     private Long userId;
     private String email;
-    private String username; // 단건 조회 시 포함될 필드
+    private String username;
 
     // 전체 조회용 정적 팩토리 메서드
     public static PlanResponseDto fromPlanForAll(Plan plan) {
@@ -31,8 +33,6 @@ public class PlanResponseDto {
                 .commentSize(plan.getCommentList().size())
                 .createdAt(plan.getCreatedAt())
                 .updatedAt(plan.getModifiedAt())
-                .userId(plan.getUser().getId())
-                .email(plan.getUser().getEmail())
                 .build();
     }
 
@@ -44,9 +44,9 @@ public class PlanResponseDto {
                 .commentSize(plan.getCommentList().size())
                 .createdAt(plan.getCreatedAt())
                 .updatedAt(plan.getModifiedAt())
-                .userId(plan.getUser().getId())
+                .userId(plan.getUser().getId()) // 단건 조회 시에만 추가
                 .email(plan.getUser().getEmail())
-                .username(plan.getUser().getUsername()) // 단건 조회 시에만 추가
+                .username(plan.getUser().getUsername())
                 .build();
     }
 }

@@ -5,26 +5,30 @@ import com.sparta.plan.dto.PlanResponseDto;
 import com.sparta.plan.entity.Plan;
 import com.sparta.plan.entity.User;
 import com.sparta.plan.repository.PlanRepository;
+import com.sparta.plan.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PlanService {
 
     private final PlanRepository planRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public PlanResponseDto createPlan(PlanRequestDto requestDto, User user) {
+    public PlanResponseDto createPlan(PlanRequestDto requestDto) {
 
-        Plan savePlan = planRepository.save(new Plan(requestDto, user));
-        return PlanResponseDto.fromPlanForSingle(savePlan);
+        User findUser = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        Plan plan = new Plan(requestDto, findUser);
 
+        planRepository.save(plan);
+
+        return PlanResponseDto.fromPlanForSingle(plan);
     }
 
     public PlanResponseDto getPlan(Long id) {
@@ -32,14 +36,11 @@ public class PlanService {
         return PlanResponseDto.fromPlanForSingle(plan);
     }
 
-    public List<PlanResponseDto> getPlans(PlanRequestDto requestDto, int page, int size) {
-
+    public Page<PlanResponseDto> getPlans(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-
-        return planRepository.findAllByUserOrderByModifiedAtDesc(requestDto.getUserId(), pageable)
-                .stream()
-                .map(PlanResponseDto::fromPlanForSingle)
-                .collect(Collectors.toList());
+        Page<Plan> planList = planRepository.findAllByOrderByModifiedAtDesc(pageable);
+        // Page<Plan> -> Page<PlanResponseDto> 바꾸는법
+        return planList.map(PlanResponseDto::fromPlanForAll);
     }
 
     @Transactional
@@ -47,9 +48,7 @@ public class PlanService {
         Plan plan = planRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
         );
-
         plan.update(requestDto);
-
         return PlanResponseDto.fromPlanForSingle(plan);
     }
 
